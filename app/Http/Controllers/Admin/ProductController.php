@@ -3,63 +3,72 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Product;
+use App\Models\Agency;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $products = Product::with('agency')->paginate(10);
+        return view('admin.products.index', compact('products'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        $agencies = Agency::all();
+        return view('admin.products.create', compact('agencies'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'title' => 'required|string|max:255',
+            'agency_id' => 'required|exists:agencies,id',
+            'type' => 'required|in:omra,hajj',
+            'price' => 'required|numeric',
+            'departure' => 'required|string',
+            'description' => 'required|string',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date',
+        ]);
+
+        Product::create($data);
+
+        return redirect()->route('admin.products.index')
+            ->with('success', 'Offre créée avec succès');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function edit(Product $product)
     {
-        //
+        $agencies = Agency::all();
+        return view('admin.products.edit', compact('product', 'agencies'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function update(Request $request, Product $product)
     {
-        //
+        $data = $request->validate([
+            'title' => 'required|string|max:255',
+            'agency_id' => 'required|exists:agencies,id',
+            'type' => 'required|in:omra,hajj',
+            'price' => 'required|numeric',
+            'departure' => 'required|string',
+            'description' => 'required|string',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date',
+        ]);
+
+        $product->update($data);
+
+        return redirect()->route('admin.products.index')
+            ->with('success', 'Offre mise à jour avec succès');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function destroy(Product $product)
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        $product->delete();
+        return redirect()->route('admin.products.index')
+            ->with('success', 'Offre supprimée avec succès');
     }
 }
