@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\AgencyController;
+use App\Http\Controllers\Admin\ProductController;
 
   
 
@@ -26,8 +27,8 @@ Route::middleware(['web', 'auth'])
     ->name('admin.')
     ->group(function () {
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
-        Route::get('/agencies', [\App\Http\Controllers\Admin\AgencyController::class, 'index'])->name('agencies.index');
         Route::resource('agencies', AgencyController::class);
+        Route::resource('products', App\Http\Controllers\Admin\ProductController::class);
     });
 
 require __DIR__.'/auth.php';

@@ -7,11 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 class Product extends Model
 {
     protected $casts = [
-        'images' => 'array',
         'features' => 'array',
         'itinerary' => 'array',
         'included' => 'array',
         'excluded' => 'array',
+        'images' => 'array',
+        'start_date' => 'date',
+        'end_date' => 'date'
     ];
     
     public function agency()
