@@ -57,9 +57,9 @@
             <textarea name="bigDescription" id="bigDescription" rows="4" class="w-full mt-1 border rounded px-3 py-2">{{ old('bigDescription') }}</textarea>
         </div>
 
-        <div class="mb-6">
-            <label for="image" class="block font-medium text-gray-700">Logo / Image</label>
-            <input type="file" name="image" id="image" class="mt-1">
+        <div class="mb-4">
+            <label for="image" class="block text-sm font-medium text-gray-700">Image de l'agence</label>
+            <input type="file" name="image" id="image" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
         </div>
 
         <div class="flex items-center justify-between">

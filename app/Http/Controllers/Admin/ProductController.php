@@ -3,15 +3,15 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Agency;
-use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
     public function index()
     {
-        $products = Product::with('agency')->paginate(10);
+        $products = Product::with('agency')->get();
         return view('admin.products.index', compact('products'));
     }
 
@@ -23,21 +23,40 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
-        $data = $request->validate([
+        $validated = $request->validate([
             'title' => 'required|string|max:255',
-            'agency_id' => 'required|exists:agencies,id',
-            'type' => 'required|in:omra,hajj',
+            'type' => 'required|string|max:255',
+            'duration' => 'nullable|string|max:255',
             'price' => 'required|numeric',
-            'departure' => 'required|string',
-            'description' => 'required|string',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date',
+            'departure' => 'nullable|string|max:255',
+            'agency_id' => 'required|exists:agencies,id',
+            'description' => 'nullable|string',
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date',
+            'whatsapp_number' => 'nullable|string|max:255',
+            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
-        Product::create($data);
+        // Handle image upload
+        $images = [];
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $file) {
+                $path = $file->store('products', 'public');
+                $images[] = 'storage/' . $path;
+            }
+        }
 
-        return redirect()->route('admin.products.index')
-            ->with('success', 'Offre créée avec succès');
+        $product = new Product($validated);
+
+        $product->features = $request->input('features', []);
+        $product->itinerary = $request->input('itinerary', []);
+        $product->included = $request->input('included', []);
+        $product->excluded = $request->input('excluded', []);
+        $product->images = $images;
+
+        $product->save();
+
+        return redirect()->route('admin.products.index')->with('success', 'Produit créé avec succès.');
     }
 
     public function edit(Product $product)
@@ -48,27 +67,46 @@ class ProductController extends Controller
 
     public function update(Request $request, Product $product)
     {
-        $data = $request->validate([
+        $validated = $request->validate([
             'title' => 'required|string|max:255',
-            'agency_id' => 'required|exists:agencies,id',
-            'type' => 'required|in:omra,hajj',
+            'type' => 'required|string|max:255',
+            'duration' => 'nullable|string|max:255',
             'price' => 'required|numeric',
-            'departure' => 'required|string',
-            'description' => 'required|string',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date',
+            'departure' => 'nullable|string|max:255',
+            'agency_id' => 'required|exists:agencies,id',
+            'description' => 'nullable|string',
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date',
+            'whatsapp_number' => 'nullable|string|max:255',
+            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
-        $product->update($data);
+        // Handle new uploaded images if any
+        $images = $product->images ?? [];
+        if ($request->hasFile('images')) {
+            $images = [];
+            foreach ($request->file('images') as $file) {
+                $path = $file->store('products', 'public');
+                $images[] = 'storage/' . $path;
+            }
+        }
 
-        return redirect()->route('admin.products.index')
-            ->with('success', 'Offre mise à jour avec succès');
+        $product->update($validated);
+
+        $product->features = $request->input('features', []);
+        $product->itinerary = $request->input('itinerary', []);
+        $product->included = $request->input('included', []);
+        $product->excluded = $request->input('excluded', []);
+        $product->images = $images;
+
+        $product->save();
+
+        return redirect()->route('admin.products.index')->with('success', 'Produit mis à jour avec succès.');
     }
 
     public function destroy(Product $product)
     {
         $product->delete();
-        return redirect()->route('admin.products.index')
-            ->with('success', 'Offre supprimée avec succès');
+        return redirect()->route('admin.products.index')->with('success', 'Produit supprimé avec succès.');
     }
 }

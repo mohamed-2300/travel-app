@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Agency;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class AgencyController extends Controller
 {
@@ -30,10 +31,16 @@ class AgencyController extends Controller
             'website' => 'nullable|url',
             'smallDescription' => 'nullable|string',
             'bigDescription' => 'nullable|string',
-            'image' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // ✅ C'est un fichier image !
         ]);
 
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('agencies', 'public');
+            $validated['image'] = 'storage/' . $path;
+        }
+
         Agency::create($validated);
+
         return redirect()->route('admin.agencies.index')->with('success', 'Agence créée avec succès.');
     }
 
@@ -53,16 +60,33 @@ class AgencyController extends Controller
             'website' => 'nullable|url',
             'smallDescription' => 'nullable|string',
             'bigDescription' => 'nullable|string',
-            'image' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // ✅
         ]);
 
+        if ($request->hasFile('image')) {
+            // Supprimer l'ancienne image si elle existe
+            if ($agency->image && file_exists(public_path($agency->image))) {
+                unlink(public_path($agency->image));
+            }
+
+            $path = $request->file('image')->store('agencies', 'public');
+            $validated['image'] = 'storage/' . $path;
+        }
+
         $agency->update($validated);
+
         return redirect()->route('admin.agencies.index')->with('success', 'Agence mise à jour avec succès.');
     }
 
     public function destroy(Agency $agency)
     {
+        // Supprimer l'image associée si elle existe
+        if ($agency->image && file_exists(public_path($agency->image))) {
+            unlink(public_path($agency->image));
+        }
+
         $agency->delete();
+
         return redirect()->route('admin.agencies.index')->with('success', 'Agence supprimée avec succès.');
     }
 }
