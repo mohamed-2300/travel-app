@@ -4,50 +4,77 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin | @yield('title', 'Dashboard')</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            background-color: #f8f9fa;
-        }
-        .sidebar {
-            min-height: 100vh;
-            background-color: #343a40;
-        }
-        .sidebar a {
-            color: #fff;
-            padding: 12px 20px;
-            display: block;
-            text-decoration: none;
-        }
-        .sidebar a:hover,
-        .sidebar .active {
-            background-color: #495057;
-        }
-    </style>
+
+    <!-- Material Dashboard CSS -->
+    <link href="{{ asset('assets/css/material-dashboard.css') }}" rel="stylesheet" />
+
+    <!-- Fonts and icons -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons" rel="stylesheet">
+    <link href="{{ asset('assets/css/nucleo-icons.css') }}" rel="stylesheet" />
+    <link href="{{ asset('assets/css/nucleo-svg.css') }}" rel="stylesheet" />
+    
 </head>
-<body>
-
-<div class="container-fluid">
-    <div class="row">
-        <!-- Sidebar -->
-        <div class="col-md-3 col-lg-2 sidebar d-flex flex-column p-0">
-            <div class="p-3 text-white border-bottom border-secondary">
-                <h4 class="mb-0">Tableau de Bord</h4>
-            </div>
-            <a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">🏠 Accueil</a>
-            <a href="{{ route('admin.agencies.index') }}" class="{{ request()->is('admin/agencies*') ? 'active' : '' }}">🏢 Agences</a>
-            <a href="{{ route('admin.products.index') }}" class="{{ request()->is('admin/products*') ? 'active' : '' }}">📦 Offres</a>
-            <a href="{{ route('dashboard') }}" class="mt-auto border-top border-secondary text-center text-white py-3">🔙 Retour au site</a>
-        </div>
-
-        <!-- Main Content -->
-        <div class="col-md-9 col-lg-10 p-4">
-            @yield('content')
-        </div>
+<body class="g-sidenav-show bg-gray-200">
+@include('admin.partials.navbar')
+<!-- Sidebar -->
+<aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl fixed-start bg-gradient-dark" id="sidenav-main">
+    <div class="sidenav-header">
+        <i class="material-icons opacity-10">dashboard</i>
+        <span class="ms-1 font-weight-bold text-white">Tableau de Bord</span>
     </div>
-</div>
+    <hr class="horizontal light mt-0 mb-2">
+    <div class="collapse navbar-collapse w-auto" id="sidenav-collapse-main">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link text-white {{ request()->routeIs('admin.dashboard') ? 'active bg-gradient-primary' : '' }}" href="{{ route('admin.dashboard') }}">
+                    <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="material-icons">home</i>
+                    </div>
+                    <span class="nav-link-text ms-1">Accueil</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-white {{ request()->is('admin/agencies*') ? 'active bg-gradient-primary' : '' }}" href="{{ route('admin.agencies.index') }}">
+                    <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="material-icons">business</i>
+                    </div>
+                    <span class="nav-link-text ms-1">Agences</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-white {{ request()->is('admin/products*') ? 'active bg-gradient-primary' : '' }}" href="{{ route('admin.products.index') }}">
+                    <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="material-icons">inventory_2</i>
+                    </div>
+                    <span class="nav-link-text ms-1">Offres</span>
+                </a>
+            </li>
+            <li class="nav-item mt-auto">
+                <a class="nav-link text-white" href="http://localhost:8080" target="_blank">
+                    <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="material-icons">arrow_back</i>
+                    </div>
+                    <span class="nav-link-text ms-1">Retour au site</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</aside>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Main Content -->
+<main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
+    <div class="container-fluid py-4">
+        @yield('content')
+    </div>
+</main>
+
+<!-- Material Dashboard JS -->
+<script src="{{ asset('assets/js/core/popper.min.js') }}"></script>
+<script src="{{ asset('assets/js/core/bootstrap.min.js') }}"></script>
+<script src="{{ asset('assets/js/material-dashboard.min.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
 @stack('scripts')
 </body>
 </html>

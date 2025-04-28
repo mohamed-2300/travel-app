@@ -1,54 +1,62 @@
 @extends('admin.layout')
 
 @section('content')
-<div class="flex items-center justify-between mb-6">
-    <h1 class="text-2xl font-semibold text-gray-800">Liste des offres</h1>
-    <a href="{{ route('admin.products.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow">
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="mb-0">Liste des offres</h4>
+    <a href="{{ route('admin.products.create') }}" class="btn btn-primary btn-sm">
         + Nouvelle offre
     </a>
 </div>
 
 @if(session('success'))
-    <div class="mb-4 p-4 bg-green-100 text-green-700 rounded">
+    <div class="alert alert-success text-white font-weight-bold" role="alert">
         {{ session('success') }}
     </div>
 @endif
 
-<div class="overflow-x-auto bg-white rounded shadow border border-gray-200">
-    <table class="w-full table-auto">
-        <thead class="bg-gray-100 text-left">
-            <tr class="text-sm text-gray-600">
-                <th class="px-4 py-3">Titre</th>
-                <th class="px-4 py-3">Agence</th>
-                <th class="px-4 py-3">Type</th>
-                <th class="px-4 py-3">Prix</th>
-                <th class="px-4 py-3 text-right">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @forelse ($products as $product)
-                <tr class="border-t text-sm text-gray-800 hover:bg-gray-50">
-                    <td class="px-4 py-3">{{ $product->title }}</td>
-                    <td class="px-4 py-3">{{ $product->agency->name }}</td>
-                    <td class="px-4 py-3">{{ $product->type }}</td>
-                    <td class="px-4 py-3">{{ number_format($product->price, 2) }} €</td>
-                    <td class="px-4 py-3 text-right space-x-2">
-                        <a href="{{ route('admin.products.edit', $product->id) }}" class="text-blue-600 hover:underline">Modifier</a>
-                        <form action="{{ route('admin.products.destroy', $product->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Supprimer cette offre ?')">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="text-red-600 hover:underline">Supprimer</button>
-                        </form>
-                    </td>
-                </tr>
-            @empty
-                <tr>
-                    <td colspan="5" class="px-4 py-6 text-center text-gray-500">
-                        Aucune offre trouvée.
-                    </td>
-                </tr>
-            @endforelse
-        </tbody>
-    </table>
+<div class="card">
+    <div class="card-body px-0 pt-0 pb-2">
+        <div class="table-responsive p-3">
+            <table class="table align-items-center mb-0">
+                <thead>
+                    <tr>
+                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Titre</th>
+                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Agence</th>
+                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Type</th>
+                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Prix</th>
+                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse ($products as $product)
+                        <tr>
+                            <td class="text-sm font-weight-normal">{{ $product->title }}</td>
+                            <td class="text-sm font-weight-normal">{{ $product->agency->name }}</td>
+                            <td class="text-sm font-weight-normal">{{ $product->type }}</td>
+                            <td class="text-sm font-weight-normal">{{ number_format($product->price, 2) }} €</td>
+                            <td class="text-sm font-weight-normal text-end">
+                                <a href="{{ route('admin.products.edit', $product->id) }}" class="btn btn-sm btn-outline-primary">
+                                    Modifier
+                                </a>
+                                <form action="{{ route('admin.products.destroy', $product->id) }}" method="POST" class="d-inline-block" onsubmit="return confirm('Supprimer cette offre ?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">
+                                        Supprimer
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="5" class="text-center text-secondary py-4">
+                                Aucune offre trouvée.
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 @endsection

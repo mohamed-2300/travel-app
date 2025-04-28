@@ -1,23 +1,23 @@
 @extends('admin.layout')
 
 @section('content')
-<div class="container mx-auto px-4 py-6">
-    <h1 class="text-2xl font-semibold mb-6">Modifier le produit</h1>
+<div class="container-fluid py-4">
+    <h1 class="text-xl font-semibold text-gray-800 mb-4">Modifier le produit</h1>
 
-    <form action="{{ route('admin.products.update', $product->id) }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+    <form action="{{ route('admin.products.update', $product->id) }}" method="POST" enctype="multipart/form-data" class="space-y-4">
         @csrf
         @method('PUT')
 
         {{-- Titre --}}
         <div>
-            <label class="block font-medium mb-1">Titre</label>
-            <input type="text" name="title" class="w-full border p-2" value="{{ old('title', $product->title) }}" required>
+            <label for="title" class="text-sm font-medium text-gray-600">Titre</label>
+            <input type="text" name="title" id="title" class="form-control" value="{{ old('title', $product->title) }}" required>
         </div>
 
         {{-- Type --}}
         <div>
-            <label class="block font-medium mb-1">Type</label>
-            <select name="type" class="w-full border p-2" required>
+            <label for="type" class="text-sm font-medium text-gray-600">Type</label>
+            <select name="type" id="type" class="form-control" required>
                 <option value="Omra" {{ $product->type === 'Omra' ? 'selected' : '' }}>Omra</option>
                 <option value="Hajj" {{ $product->type === 'Hajj' ? 'selected' : '' }}>Hajj</option>
             </select>
@@ -25,154 +25,114 @@
 
         {{-- Durée --}}
         <div>
-            <label class="block font-medium mb-1">Durée</label>
-            <input type="text" name="duration" class="w-full border p-2" value="{{ old('duration', $product->duration) }}">
+            <label for="duration" class="text-sm font-medium text-gray-600">Durée</label>
+            <input type="text" name="duration" id="duration" class="form-control" value="{{ old('duration', $product->duration) }}">
         </div>
 
         {{-- Prix --}}
         <div>
-            <label class="block font-medium mb-1">Prix</label>
-            <input type="number" name="price" class="w-full border p-2" value="{{ old('price', $product->price) }}" required>
+            <label for="price" class="text-sm font-medium text-gray-600">Prix</label>
+            <input type="number" name="price" id="price" class="form-control" value="{{ old('price', $product->price) }}" required>
         </div>
 
         {{-- Départ --}}
         <div>
-            <label class="block font-medium mb-1">Ville de départ</label>
-            <input type="text" name="departure" class="w-full border p-2" value="{{ old('departure', $product->departure) }}">
+            <label for="departure" class="text-sm font-medium text-gray-600">Ville de départ</label>
+            <input type="text" name="departure" id="departure" class="form-control" value="{{ old('departure', $product->departure) }}">
         </div>
 
         {{-- Agence --}}
         <div>
-            <label class="block font-medium mb-1">Agence</label>
-            <select name="agency_id" class="w-full border p-2" required>
+            <label for="agency_id" class="text-sm font-medium text-gray-600">Agence</label>
+            <select name="agency_id" id="agency_id" class="form-control" required>
                 @foreach($agencies as $agency)
-                    <option value="{{ $agency->id }}" {{ $product->agency_id == $agency->id ? 'selected' : '' }}>
-                        {{ $agency->name }}
-                    </option>
+                    <option value="{{ $agency->id }}" {{ $product->agency_id == $agency->id ? 'selected' : '' }}>{{ $agency->name }}</option>
                 @endforeach
             </select>
         </div>
 
         {{-- Dates --}}
-        <div class="grid grid-cols-2 gap-4">
-            <div>
-                <label class="block font-medium mb-1">Date de début</label>
-                <input type="date" name="start_date" class="w-full border p-2" value="{{ old('start_date', $product->start_date) }}">
+        <div class="row">
+            <div class="col-md-6">
+                <label for="start_date" class="text-sm font-medium text-gray-600">Date de début</label>
+                <input type="date" name="start_date" id="start_date" class="form-control" value="{{ old('start_date', $product->start_date) }}">
             </div>
-            <div>
-                <label class="block font-medium mb-1">Date de fin</label>
-                <input type="date" name="end_date" class="w-full border p-2" value="{{ old('end_date', $product->end_date) }}">
+            <div class="col-md-6">
+                <label for="end_date" class="text-sm font-medium text-gray-600">Date de fin</label>
+                <input type="date" name="end_date" id="end_date" class="form-control" value="{{ old('end_date', $product->end_date) }}">
             </div>
         </div>
 
         {{-- WhatsApp --}}
         <div>
-            <label class="block font-medium mb-1">Numéro WhatsApp</label>
-            <input type="text" name="whatsapp_number" class="w-full border p-2" value="{{ old('whatsapp_number', $product->whatsapp_number) }}">
+            <label for="whatsapp_number" class="text-sm font-medium text-gray-600">Numéro WhatsApp</label>
+            <input type="text" name="whatsapp_number" id="whatsapp_number" class="form-control" value="{{ old('whatsapp_number', $product->whatsapp_number) }}">
         </div>
 
         {{-- Description --}}
         <div>
-            <label class="block font-medium mb-1">Description</label>
-            <textarea name="description" class="w-full border p-2" rows="4">{{ old('description', $product->description) }}</textarea>
+            <label for="description" class="text-sm font-medium text-gray-600">Description</label>
+            <textarea name="description" id="description" class="form-control" rows="4">{{ old('description', $product->description) }}</textarea>
         </div>
 
         {{-- Image principale --}}
         <div>
-            <label class="block font-medium mb-1">Changer les images (facultatif)</label>
-            <input type="file" name="images[]" multiple class="w-full border p-2">
+            <label for="images" class="text-sm font-medium text-gray-600">Changer les images (facultatif)</label>
+            <input type="file" name="images[]" id="images" multiple class="form-control">
         </div>
 
         {{-- Features dynamiques --}}
         <div id="features-wrapper" class="space-y-2">
-            <label class="block font-medium mb-1">Features</label>
-            @if(is_array($product->features))
-                @foreach($product->features as $feature)
-                    <input type="text" name="features[]" class="w-full border p-2" value="{{ $feature }}">
-                @endforeach
-            @endif
-            <button type="button" onclick="addFeature()" class="bg-green-500 text-white px-3 py-1 rounded mt-2">Ajouter un feature</button>
+            <label class="text-sm font-medium text-gray-600">Features</label>
+            @foreach($product->features as $feature)
+                <input type="text" name="features[]" class="form-control" value="{{ $feature }}">
+            @endforeach
+            <button type="button" onclick="addDynamicField('features')" class="btn btn-success mt-2">Ajouter un feature</button>
         </div>
 
         {{-- Itinerary dynamique --}}
         <div id="itinerary-wrapper" class="space-y-2">
-            <label class="block font-medium mb-1">Itinerary</label>
-            @if(is_array($product->itinerary))
-                @foreach($product->itinerary as $day)
-                    <input type="text" name="itinerary[]" class="w-full border p-2" value="{{ $day }}">
-                @endforeach
-            @endif
-            <button type="button" onclick="addItinerary()" class="bg-green-500 text-white px-3 py-1 rounded mt-2">Ajouter un jour</button>
+            <label class="text-sm font-medium text-gray-600">Itinerary</label>
+            @foreach($product->itinerary as $day)
+                <input type="text" name="itinerary[]" class="form-control" value="{{ $day }}">
+            @endforeach
+            <button type="button" onclick="addDynamicField('itinerary')" class="btn btn-success mt-2">Ajouter un jour</button>
         </div>
 
         {{-- Included dynamique --}}
         <div id="included-wrapper" class="space-y-2">
-            <label class="block font-medium mb-1">Inclus</label>
-            @if(is_array($product->included))
-                @foreach($product->included as $item)
-                    <input type="text" name="included[]" class="w-full border p-2" value="{{ $item }}">
-                @endforeach
-            @endif
-            <button type="button" onclick="addIncluded()" class="bg-green-500 text-white px-3 py-1 rounded mt-2">Ajouter un élément</button>
+            <label class="text-sm font-medium text-gray-600">Inclus</label>
+            @foreach($product->included as $item)
+                <input type="text" name="included[]" class="form-control" value="{{ $item }}">
+            @endforeach
+            <button type="button" onclick="addDynamicField('included')" class="btn btn-success mt-2">Ajouter un élément</button>
         </div>
 
         {{-- Excluded dynamique --}}
         <div id="excluded-wrapper" class="space-y-2">
-            <label class="block font-medium mb-1">Exclus</label>
-            @if(is_array($product->excluded))
-                @foreach($product->excluded as $item)
-                    <input type="text" name="excluded[]" class="w-full border p-2" value="{{ $item }}">
-                @endforeach
-            @endif
-            <button type="button" onclick="addExcluded()" class="bg-green-500 text-white px-3 py-1 rounded mt-2">Ajouter un élément</button>
+            <label class="text-sm font-medium text-gray-600">Exclus</label>
+            @foreach($product->excluded as $item)
+                <input type="text" name="excluded[]" class="form-control" value="{{ $item }}">
+            @endforeach
+            <button type="button" onclick="addDynamicField('excluded')" class="btn btn-success mt-2">Ajouter un élément</button>
         </div>
 
         {{-- Bouton submit --}}
         <div>
-            <button type="submit" class="bg-noor-gold hover:bg-noor-gold-dark text-noor-dark px-6 py-2 rounded">
-                Mettre à jour
-            </button>
+            <button type="submit" class="btn btn-warning">Mettre à jour</button>
         </div>
     </form>
 </div>
 
 {{-- Scripts dynamiques --}}
 <script>
-    function addFeature() {
-        const wrapper = document.getElementById('features-wrapper');
+    function addDynamicField(type) {
+        const wrapper = document.getElementById(type + '-wrapper');
         const input = document.createElement('input');
         input.type = 'text';
-        input.name = 'features[]';
-        input.className = 'w-full border p-2';
-        wrapper.appendChild(input);
-    }
-
-    function addItinerary() {
-        const wrapper = document.getElementById('itinerary-wrapper');
-        const input = document.createElement('input');
-        input.type = 'text';
-        input.name = 'itinerary[]';
-        input.className = 'w-full border p-2';
-        wrapper.appendChild(input);
-    }
-
-    function addIncluded() {
-        const wrapper = document.getElementById('included-wrapper');
-        const input = document.createElement('input');
-        input.type = 'text';
-        input.name = 'included[]';
-        input.className = 'w-full border p-2';
-        wrapper.appendChild(input);
-    }
-
-    function addExcluded() {
-        const wrapper = document.getElementById('excluded-wrapper');
-        const input = document.createElement('input');
-        input.type = 'text';
-        input.name = 'excluded[]';
-        input.className = 'w-full border p-2';
+        input.name = type + '[]';
+        input.className = 'form-control';
         wrapper.appendChild(input);
     }
 </script>
-
 @endsection

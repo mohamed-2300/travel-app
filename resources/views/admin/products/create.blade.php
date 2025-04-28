@@ -1,116 +1,125 @@
 @extends('admin.layout')
 
 @section('content')
-<div class="container mx-auto px-4 py-6">
-    <h1 class="text-2xl font-semibold mb-6">Ajouter un nouveau produit</h1>
-
-    <form action="{{ route('admin.products.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
-        @csrf
-
-        {{-- Titre --}}
-        <div>
-            <label class="block font-medium mb-1">Titre</label>
-            <input type="text" name="title" class="w-full border p-2" required>
+<div class="container-fluid py-4">
+    <div class="card">
+        <div class="card-header pb-0">
+            <h4>Ajouter un nouveau produit</h4>
         </div>
+        <div class="card-body">
+            <form action="{{ route('admin.products.store') }}" method="POST" enctype="multipart/form-data">
+                @csrf
 
-        {{-- Type --}}
-        <div>
-            <label class="block font-medium mb-1">Type</label>
-            <select name="type" class="w-full border p-2" required>
-                <option value="Omra">Omra</option>
-                <option value="Hajj">Hajj</option>
-            </select>
-        </div>
+                {{-- Titre --}}
+                <div class="mb-3">
+                    <label class="form-label">Titre</label>
+                    <input type="text" name="title" class="form-control" required>
+                </div>
 
-        {{-- Durée --}}
-        <div>
-            <label class="block font-medium mb-1">Durée</label>
-            <input type="text" name="duration" class="w-full border p-2">
-        </div>
+                {{-- Type --}}
+                <div class="mb-3">
+                    <label class="form-label">Type</label>
+                    <select name="type" class="form-select" required>
+                        <option value="Omra">Omra</option>
+                        <option value="Hajj">Hajj</option>
+                    </select>
+                </div>
 
-        {{-- Prix --}}
-        <div>
-            <label class="block font-medium mb-1">Prix</label>
-            <input type="number" name="price" class="w-full border p-2" required>
-        </div>
+                {{-- Durée --}}
+                <div class="mb-3">
+                    <label class="form-label">Durée</label>
+                    <input type="text" name="duration" class="form-control">
+                </div>
 
-        {{-- Départ --}}
-        <div>
-            <label class="block font-medium mb-1">Ville de départ</label>
-            <input type="text" name="departure" class="w-full border p-2">
-        </div>
+                {{-- Prix --}}
+                <div class="mb-3">
+                    <label class="form-label">Prix (€)</label>
+                    <input type="number" name="price" class="form-control" required>
+                </div>
 
-        {{-- Agence --}}
-        <div>
-            <label class="block font-medium mb-1">Agence</label>
-            <select name="agency_id" class="w-full border p-2" required>
-                @foreach($agencies as $agency)
-                    <option value="{{ $agency->id }}">{{ $agency->name }}</option>
-                @endforeach
-            </select>
-        </div>
+                {{-- Départ --}}
+                <div class="mb-3">
+                    <label class="form-label">Ville de départ</label>
+                    <input type="text" name="departure" class="form-control">
+                </div>
 
-        {{-- Dates --}}
-        <div class="grid grid-cols-2 gap-4">
-            <div>
-                <label class="block font-medium mb-1">Date de début</label>
-                <input type="date" name="start_date" class="w-full border p-2">
-            </div>
-            <div>
-                <label class="block font-medium mb-1">Date de fin</label>
-                <input type="date" name="end_date" class="w-full border p-2">
-            </div>
-        </div>
+                {{-- Agence --}}
+                <div class="mb-3">
+                    <label class="form-label">Agence</label>
+                    <select name="agency_id" class="form-select" required>
+                        @foreach($agencies as $agency)
+                            <option value="{{ $agency->id }}">{{ $agency->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
 
-        {{-- WhatsApp --}}
-        <div>
-            <label class="block font-medium mb-1">Numéro WhatsApp</label>
-            <input type="text" name="whatsapp_number" class="w-full border p-2">
-        </div>
+                {{-- Dates --}}
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Date de début</label>
+                        <input type="date" name="start_date" class="form-control">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Date de fin</label>
+                        <input type="date" name="end_date" class="form-control">
+                    </div>
+                </div>
 
-        {{-- Description --}}
-        <div>
-            <label class="block font-medium mb-1">Description</label>
-            <textarea name="description" class="w-full border p-2" rows="4"></textarea>
-        </div>
+                {{-- WhatsApp --}}
+                <div class="mb-3">
+                    <label class="form-label">Numéro WhatsApp</label>
+                    <input type="text" name="whatsapp_number" class="form-control">
+                </div>
 
-        {{-- Image principale --}}
-        <div>
-            <label class="block font-medium mb-1">Image principale</label>
-            <input type="file" name="images[]" multiple class="w-full border p-2">
-        </div>
+                {{-- Description --}}
+                <div class="mb-3">
+                    <label class="form-label">Description</label>
+                    <textarea name="description" class="form-control" rows="4"></textarea>
+                </div>
 
-        {{-- Features dynamiques --}}
-        <div id="features-wrapper" class="space-y-2">
-            <label class="block font-medium mb-1">Features</label>
-            <button type="button" onclick="addFeature()" class="bg-green-500 text-white px-3 py-1 rounded mb-2">Ajouter un feature</button>
-        </div>
+                {{-- Image principale --}}
+                <div class="mb-3">
+                    <label class="form-label">Image principale</label>
+                    <input type="file" name="images[]" multiple class="form-control">
+                </div>
 
-        {{-- Itinerary dynamique --}}
-        <div id="itinerary-wrapper" class="space-y-2">
-            <label class="block font-medium mb-1">Itinerary</label>
-            <button type="button" onclick="addItinerary()" class="bg-green-500 text-white px-3 py-1 rounded mb-2">Ajouter un jour</button>
-        </div>
+                {{-- Features dynamiques --}}
+                <div class="mb-4">
+                    <label class="form-label d-block">Features</label>
+                    <button type="button" onclick="addFeature()" class="btn btn-outline-success btn-sm mb-2">Ajouter un feature</button>
+                    <div id="features-wrapper" class="d-flex flex-column gap-2"></div>
+                </div>
 
-        {{-- Included dynamique --}}
-        <div id="included-wrapper" class="space-y-2">
-            <label class="block font-medium mb-1">Inclus</label>
-            <button type="button" onclick="addIncluded()" class="bg-green-500 text-white px-3 py-1 rounded mb-2">Ajouter un élément</button>
-        </div>
+                {{-- Itinerary dynamique --}}
+                <div class="mb-4">
+                    <label class="form-label d-block">Itinerary</label>
+                    <button type="button" onclick="addItinerary()" class="btn btn-outline-success btn-sm mb-2">Ajouter un jour</button>
+                    <div id="itinerary-wrapper" class="d-flex flex-column gap-2"></div>
+                </div>
 
-        {{-- Excluded dynamique --}}
-        <div id="excluded-wrapper" class="space-y-2">
-            <label class="block font-medium mb-1">Exclus</label>
-            <button type="button" onclick="addExcluded()" class="bg-green-500 text-white px-3 py-1 rounded mb-2">Ajouter un élément</button>
-        </div>
+                {{-- Included dynamique --}}
+                <div class="mb-4">
+                    <label class="form-label d-block">Inclus</label>
+                    <button type="button" onclick="addIncluded()" class="btn btn-outline-success btn-sm mb-2">Ajouter un élément</button>
+                    <div id="included-wrapper" class="d-flex flex-column gap-2"></div>
+                </div>
 
-        {{-- Bouton submit --}}
-        <div>
-            <button type="submit" class="bg-noor-gold hover:bg-noor-gold-dark text-noor-dark px-6 py-2 rounded">
-                Enregistrer
-            </button>
+                {{-- Excluded dynamique --}}
+                <div class="mb-4">
+                    <label class="form-label d-block">Exclus</label>
+                    <button type="button" onclick="addExcluded()" class="btn btn-outline-success btn-sm mb-2">Ajouter un élément</button>
+                    <div id="excluded-wrapper" class="d-flex flex-column gap-2"></div>
+                </div>
+
+                {{-- Submit --}}
+                <div class="text-end">
+                    <button type="submit" class="btn btn-primary">
+                        Enregistrer
+                    </button>
+                </div>
+            </form>
         </div>
-    </form>
+    </div>
 </div>
 
 {{-- Scripts dynamiques --}}
@@ -120,7 +129,7 @@
         const input = document.createElement('input');
         input.type = 'text';
         input.name = 'features[]';
-        input.className = 'w-full border p-2';
+        input.className = 'form-control';
         wrapper.appendChild(input);
     }
 
@@ -129,7 +138,7 @@
         const input = document.createElement('input');
         input.type = 'text';
         input.name = 'itinerary[]';
-        input.className = 'w-full border p-2';
+        input.className = 'form-control';
         wrapper.appendChild(input);
     }
 
@@ -138,7 +147,7 @@
         const input = document.createElement('input');
         input.type = 'text';
         input.name = 'included[]';
-        input.className = 'w-full border p-2';
+        input.className = 'form-control';
         wrapper.appendChild(input);
     }
 
@@ -147,9 +156,8 @@
         const input = document.createElement('input');
         input.type = 'text';
         input.name = 'excluded[]';
-        input.className = 'w-full border p-2';
+        input.className = 'form-control';
         wrapper.appendChild(input);
     }
 </script>
-
 @endsection
