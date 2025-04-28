@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Product;
+use App\Models\Activity;
 use App\Models\Agency;
 
 class ProductController extends Controller
@@ -56,6 +57,12 @@ class ProductController extends Controller
 
         $product->save();
 
+        Activity::create([
+            'activity_type' => 'add',
+            'entity_type'   => 'product',
+            'entity_name'   => $product->title,
+        ]);
+
         return redirect()->route('admin.products.index')->with('success', 'Produit créé avec succès.');
     }
 
@@ -101,12 +108,25 @@ class ProductController extends Controller
 
         $product->save();
 
+        Activity::create([
+            'activity_type' => 'modify',
+            'entity_type'   => 'product',
+            'entity_name'   => $product->title,
+        ]);
+
         return redirect()->route('admin.products.index')->with('success', 'Produit mis à jour avec succès.');
     }
 
     public function destroy(Product $product)
     {
         $product->delete();
+
+        Activity::create([
+            'activity_type' => 'delete',
+            'entity_type'   => 'product',
+            'entity_name'   => $product->title,
+        ]);
+        
         return redirect()->route('admin.products.index')->with('success', 'Produit supprimé avec succès.');
     }
 }

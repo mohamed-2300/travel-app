@@ -5,6 +5,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Agency;
 use App\Models\Product;
 use Illuminate\Support\Facades\DB;
+use App\Models\Activity;
+use Carbon\Carbon;  // if you used Carbon
+
 
 class DashboardController extends Controller
 {
@@ -33,9 +36,13 @@ class DashboardController extends Controller
         $agenciesCount = Agency::count();
         $productsCount = Product::count();
 
+        // recent 5 activities
+        $recentActivities = Activity::latest()->take(5)->get();
+
         return view('admin.dashboard', compact(
             'agenciesCount','productsCount',
-            'months','agencyCounts','productCounts'
+            'months','agencyCounts','productCounts',
+            'recentActivities'       // ← add this
         ));
     }
 }

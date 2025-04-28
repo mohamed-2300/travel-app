@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Agency;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Activity;
+
 
 class AgencyController extends Controller
 {
@@ -41,6 +43,12 @@ class AgencyController extends Controller
 
         Agency::create($validated);
 
+        Activity::create([
+            'activity_type' => 'add',
+            'entity_type'   => 'agency',
+            'entity_name'   => $agency->name,
+        ]);
+
         return redirect()->route('admin.agencies.index')->with('success', 'Agence créée avec succès.');
     }
 
@@ -75,6 +83,13 @@ class AgencyController extends Controller
 
         $agency->update($validated);
 
+         // Log activity
+         Activity::create([
+            'activity_type' => 'modify',
+            'entity_type'   => 'agency',
+            'entity_name'   => $agency->name,
+        ]);
+
         return redirect()->route('admin.agencies.index')->with('success', 'Agence mise à jour avec succès.');
     }
 
@@ -86,6 +101,13 @@ class AgencyController extends Controller
         }
 
         $agency->delete();
+
+        // Log activity
+        Activity::create([
+            'activity_type' => 'delete',
+            'entity_type'   => 'agency',
+            'entity_name'   => $agency->name,
+        ]);
 
         return redirect()->route('admin.agencies.index')->with('success', 'Agence supprimée avec succès.');
     }

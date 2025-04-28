@@ -113,7 +113,32 @@
   </div>
 
 
-  
+  {{-- after the line chart --}}
+    <div class="row mt-4">
+      <div class="col-12">
+        <div class="card ">
+          <div class="card-header pb-0">
+            <h6>Activités récentes</h6>
+          </div>
+          <div class="card-body p-3">
+            <ul class="list-group">
+              @foreach($recentActivities as $act)
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  <div>
+                    <strong>{{ ucfirst($act->activity_type) }}</strong>
+                    {{ $act->entity_type }}:
+                    <em>{{ $act->entity_name }}</em>
+                  </div>
+                  <span class="text-secondary text-xs">
+                    {{ $act->created_at->format('d/m H:i') }}
+                  </span>
+                </li>
+              @endforeach
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
 
 @endsection
 
