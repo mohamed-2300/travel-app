@@ -41,7 +41,7 @@ class AgencyController extends Controller
             $validated['image'] = 'storage/' . $path;
         }
 
-        Agency::create($validated);
+        $agency = Agency::create($validated);
 
         Activity::create([
             'activity_type' => 'add',

@@ -8,9 +8,6 @@ use App\Http\Controllers\Admin\ProductController;
 
   
 
-Route::get('/', function () {
-    return view('welcome');
-});
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -29,6 +26,7 @@ Route::middleware(['web', 'auth'])
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
         Route::resource('agencies', AgencyController::class);
         Route::resource('products', App\Http\Controllers\Admin\ProductController::class);
+        Route::get('/admin/profile', [AdminController::class, 'profile'])->name('admin.profile');
     });
 
 require __DIR__.'/auth.php';

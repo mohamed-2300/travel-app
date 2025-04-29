@@ -50,6 +50,14 @@
             <!-- Ajoute d'autres notifications ici -->
           </ul>
         </li>
+        <li class="nav-item d-flex align-items-s mx-5">
+          <form method="POST" action="{{ route('logout') }}" class="m-0">
+          @csrf
+            <button type="submit" class="nav-link text-body font-weight-bold px-0 border-0 bg-transparent d-flex align-items-center">
+              <i class="material-icons me-2">logout</i>
+            </button>
+          </form>
+        </li> 
       </ul>
     </div>
   </div>
